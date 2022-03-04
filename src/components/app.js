@@ -38,6 +38,7 @@ export default class App extends Component {
 				<div id="app">
 					<Iphone/ >
 				</div>
+				
 			);
 		}
 	}
