@@ -15,56 +15,194 @@ export default class Iphone extends Component {
 	constructor(props){
 		super(props);
 		// temperature state
-		this.state.temp = "";
+		this.state.high;
+		this.state.low;
+		this.state.feelsLike;
+		this.cWeatherIcon; // current weather icon 
+		this.cWeatherDescription; // description of current weather
+		this.precipitationChance;
+		this.windSpeed;
+		this.uvIndex;
+		this.forecast;
 		// button display state
 		this.setState({ display: true });
 	}
 
-	// a call to fetch weather data via wunderground
-	fetchWeatherData = () => {
+	// a call to fetch weather parsed_json via wunderground
+	fetchWeatherparsed_json = () => {
 		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
-		var url = "http://api.openweathermap.org/data/2.5/weather?q=London&units=metric&APPID=cf17e23b1d108b29a4d738d2084baf5";
+		var url = "https://api.openweathermap.org/data/2.5/onecall?lat=51.509865&lon=-0.118092&appid=0b0d6bb2481f89c3bbec13ddfa2879bd";
 		$.ajax({
 			url: url,
-			dataType: "jsonp",
+			parsed_jsonType: "jsonp",
 			success : this.parseResponse,
 			error : function(req, err){ console.log('API call failed ' + err); }
 		})
-		// once the data grabbed, hide the button
+		// once the parsed_json grabbed, hide the button
 		this.setState({ display: false });
 	}
 
 	// the main render method for the iphone component
 	render() {
-		// check if temperature data is fetched, if so add the sign styling to the page
-		const tempStyles = this.state.temp ? `${style.temperature} ${style.filled}` : style.temperature;
+		// check if temperature parsed_json is fetched, if so add the sign styling to the page
+		const tempStyles = this.state.high ? `${style.temperature} ${style.filled}` : style.temperature;
 		
-		// display all weather data
+		
+		// display all weather parsed_json
 		return (
 			<div class={ style.container }>
+				{this.state.display ? null:
 				<div class={ style.header }>
-					<div class={ style.city }>{ this.state.locate }</div>
-					<div class={ style.conditions }>{ this.state.cond }</div>
-					<span class={ tempStyles }>{ this.state.temp }</span>
+					<span>day month year</span>
+					<span style={"font-size:40px"}>City</span>
+					<span>Country</span>
+				</div>}
+				<div class={ this.state.display ? null:style.currentWeather}>
+					<div class={style.left}>
+						<div class={style.maxmin}>
+							<span >{ this.state.low }</span>
+							<span >{ this.state.high }</span>
+						</div>
+						<div class={style.actualWeather}>
+							<img  src={this.state.cWeatherIcon}/>
+							<div style={"text-transform:capitalize"}>{ this.state.cWeatherDescription }</div>
+						</div>
+					</div>
+					<div class={style.right}>
+						{this.state.display ? null:<span>Day</span>}
+						<span class={style.feelslike}>{ this.state.feelsLike }</span>
+					</div>
+						
 				</div>
-				<div class={ style.details }></div>
+				<div class={ this.state.display ? null:style.extra }>
+					<div class={style.left}>
+						<span>{ this.state.precipitationChance }</span>
+						<span >{ this.state.uvIndex }</span>
+					</div>
+					<div class={style.right}>
+					{this.state.display ? null:<span class={style.recommendation}>Jacket</span>}
+						<span class={style.ws}>{ this.state.windSpeed }</span>
+					</div>
+				</div>
+					{this.state.display ? null:
+					<div class={ style.forecast }>
+						<span class={style.subtitle}>7-day forecast</span>
+						<div class={style.forecastIcon}>
+							{this.forecastIcon(this.state.forecast[0][0],this.state.forecast[0][1])}
+							{this.forecastIcon(this.state.forecast[1][0],this.state.forecast[1][1])}
+							{this.forecastIcon(this.state.forecast[2][0],this.state.forecast[2][1])}
+							{this.forecastIcon(this.state.forecast[3][0],this.state.forecast[3][1])}
+							{this.forecastIcon(this.state.forecast[4][0],this.state.forecast[4][1])}
+							{this.forecastIcon(this.state.forecast[5][0],this.state.forecast[5][1])}
+						</div>
+					</div>
+					}
 				<div class= { style_iphone.container }> 
-					{ this.state.display ? <Button class={ style_iphone.button } clickFunction={ this.fetchWeatherData }/ > : null }
+					{ this.state.display ? <Button class={ style_iphone.button } clickFunction={ this.fetchWeatherparsed_json }/ > : null }
 				</div>
+			</div>
+		);
+	}
+	forecastIcon(temp,iconCode){
+		var icon = 'https://openweathermap.org/img/wn/'+iconCode+'@2x.png';
+		return (
+			<div class={style.forecastBox}>
+				<img class={style.icon} src={icon}/>
+				<span class={style.forecastTemp}>{temp}</span>
 			</div>
 		);
 	}
 
 	parseResponse = (parsed_json) => {
-		var location = parsed_json['name'];
-		var temp_c = parsed_json['main']['temp'];
-		var conditions = parsed_json['weather']['0']['description'];
-
+		// var location = parsed_json['name'];
+		var high_c = celsiusConvert(parsed_json['daily'][0]['temp']['max']);
+		var low_c = celsiusConvert(parsed_json['daily'][0]['temp']['min'])+"/"; // low of daily weather
+		// var high = celsiusConvert(parsed_json['daily'][0]['temp']['max']); // high of daily weather
+		var cWIcon = 'https://openweathermap.org/img/wn/'+parsed_json['current']['weather'][0]['icon']+'@2x.png'; // current weather icon 
+		var cWDescription = parsed_json['current']['weather'][0]['description']; // description of current weather
+		var feels_Like = "Feels like "+celsiusConvert(parsed_json['current']['feels_like']);
+		var pChance = (parsed_json['daily'][0]['pop'] * 100)+"%";
+		var wSpeed = Math.round(parsed_json['current']['wind_speed'] * 2.236936)+" mph";
+		var uvi = parsed_json['current']['uvi'];
+		var uv;
+		if (uvi>=8){
+			uv="Very high";
+		}else if(uvi>=6){
+			uv = "High";
+		}else if(uvi>=3){
+			uv="Medium";
+		}else {
+			uv="Low";
+		}
+		var forecasts = Array(6);
+		for (let i = 0; i < forecasts.length; i++) {
+			forecasts[i] = [celsiusConvert(parsed_json['daily'][i+1]['temp']['day']),parsed_json['daily'][i+1]['weather'][0]['icon']];
+		}
+		// for (let i = 0; i < forecast.length; i++) {
+		// 	console.log(forecast[i][0],forecast[i][1]);
+		// }
+		// var conditions = parsed_json['weather']['0']['description'];
 		// set states for fields so they could be rendered later on
+
 		this.setState({
-			locate: location,
-			temp: temp_c,
-			cond : conditions
-		});      
+			// locate: location,
+			high: high_c,
+			low: low_c,
+			feelsLike: feels_Like,
+			cWeatherIcon: cWIcon, // current weather icon 
+			cWeatherDescription: cWDescription,  // description of current weather
+			precipitationChance:pChance,
+			windSpeed:wSpeed,
+			uvIndex: uv,
+			forecast: forecasts
+			// cond : conditions
+		});
 	}
 }
+
+
+
+// fetch('https://api.openweathermap.org/parsed_json/2.5/onecall?lat=51.509865&lon=-0.118092&appid=0b0d6bb2481f89c3bbec13ddfa2879bd')
+// .then(response => response.json())
+// .then(parsed_json => {
+//     console.log(parsed_json)
+//     console.log("---------------------------------------------------------------------------------------------------------------------------------")
+//     try{
+//         var alertNeeded = true
+//         var weatherAlert = parsed_json['alerts']['event'] // weather warning or alert
+//     }catch(error){
+//         var alertNeeded = false
+//     }
+//     var low = celsiusConvert(parsed_json['daily'][0]['temp']['min']) // low of daily weather
+//     var high = celsiusConvert(parsed_json['daily'][0]['temp']['max']) // high of daily weather
+//     var cWeatherIcon = parsed_json['current']['weather'][0]['icon'] // current weather icon 
+//     var cWeatherDescription = parsed_json['current']['weather'][0]['description'] // description of current weather
+//     var feelsLike = celsiusConvert(parsed_json['current']['feels_like'])
+//     var precipitationChance = parsed_json['daily'][0]['pop'] * 100
+//     var windSpeed = Math.round(parsed_json['current']['wind_speed'] * 2.236936)
+//     var uvi = parsed_json['current']['uvi']  
+//     var uvIndex
+//     if (uvi>=8){
+//         uvIndex="Very high"
+//     }else if(uvi>=6){
+//         uvIndex = "High"
+//     }else if(uvi>=3){
+//         uvIndex="Medium"
+//     }else {
+//         uvIndex="Low"
+//     }
+//     var forecast = Array(6)
+//     for (let i = 0; i < forecast.length; i++) {
+//         forecast[i] = [celsiusConvert(parsed_json['daily'][i+1]['temp']['day']),parsed_json['daily'][i+1]['weather'][0]['icon']]
+//     }
+//     console.log(low,high,cWeatherIcon,cWeatherDescription,feelsLike,precipitationChance,windSpeed,uvIndex);
+//     for (let i = 0; i < forecast.length; i++) {
+//         console.log(forecast[i][0],forecast[i][1])
+//     }
+// })
+
+function celsiusConvert(kelvin){
+	return Math.round(kelvin - 273.15)+"°C";
+}
+
+
