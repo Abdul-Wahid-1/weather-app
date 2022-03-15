@@ -7,14 +7,18 @@ import style_iphone from '../button/style_iphone';
 import $ from 'jquery';
 // import the Button component
 import Button from '../button';
-
+import Menu from '../menu';
+import Precipitation_chance from '../interactable/precipitation_chance';
+import UV_index from '../interactable/uv_index';
+import Wind_speed from '../interactable/wind_speed';
+import Recommendations from '../interactable/recommendations';
 export default class Iphone extends Component {
 //var Iphone = React.createClass({
-
 	// a constructor with initial set states
 	constructor(props){
 		super(props);
 		// temperature state
+		// console.log(navigator.geolocation.getCurrentPosition(position));
 		this.state.high;
 		this.state.low;
 		this.state.feelsLike;
@@ -25,9 +29,14 @@ export default class Iphone extends Component {
 		this.uvIndex;
 		this.forecast;
 		// button display state
-		this.setState({ display: true });
+		this.setState({
+			display: true,
+			rec_info: false,
+			ws_info: false,
+			pc_info: false,
+			uv_info: false
+		});
 	}
-
 	// a call to fetch weather parsed_json via wunderground
 	fetchWeatherparsed_json = () => {
 		// API URL with a structure of : ttp://api.wunderground.com/api/key/feature/q/country-code/city.json
@@ -41,22 +50,62 @@ export default class Iphone extends Component {
 		// once the parsed_json grabbed, hide the button
 		this.setState({ display: false });
 	}
-
+	changeWs =()=>{
+		if (this.state.ws_info){
+			this.setState({ws_info:false});
+		} else {
+			this.setState({ws_info:true});
+		}
+	}
+	changePc =()=>{
+		if (this.state.pc_info){
+			this.setState({pc_info:false});
+		} else {
+			this.setState({pc_info:true});
+		}
+	}
+	changeUv =()=>{
+		if (this.state.uv_info){
+			this.setState({uv_info:false});
+		} else {
+			this.setState({uv_info:true});
+		}
+	}
+	changeRec =()=>{
+		if (this.state.rec_info){
+			this.setState({rec_info:false});
+		} else {
+			this.setState({rec_info:true});
+		}
+	}
 	// the main render method for the iphone component
 	render() {
 		// check if temperature parsed_json is fetched, if so add the sign styling to the page
 		const tempStyles = this.state.high ? `${style.temperature} ${style.filled}` : style.temperature;
 		
-		
+		if (this.state.rec_info){
+			return (<div class={ style.container }><button onclick={this.changeRec} > {'<'} </button><Recommendations /></div>);
+		} else if (this.state.ws_info){
+			return (<div class={ style.container }><button onclick={this.changeWs} > {'<'} </button><Wind_speed /></div>);
+		} else if (this.state.uv_info){
+			return (<div class={ style.container }><button onclick={this.changeUv} > {'<'} </button><UV_index /></div>);
+		} else if (this.state.pc_info){
+			return (<div class={ style.container }><button onclick={this.changePc} > {'<'} </button><Precipitation_chance /></div>);
+		}
 		// display all weather parsed_json
 		return (
+			this.state.rec_info ? null:
 			<div class={ style.container }>
 				{this.state.display ? null:
-				<div class={ style.header }>
-					<span>day month year</span>
-					<span style={"font-size:40px"}>City</span>
-					<span>Country</span>
-				</div>}
+				<div>
+					<Menu/>
+					<div class={ style.header }>
+						<span> {new Date().toLocaleString("en-US", { day : '2-digit'})} {new Date().toLocaleString("en-US", { month: "long" })} {new Date().getFullYear()}</span>
+						<span style={"font-size:40px"}>City</span>
+						<span>Country</span>
+					</div>
+				</div>
+				}
 				<div class={ this.state.display ? null:style.currentWeather}>
 					<div class={style.left}>
 						<div class={style.maxmin}>
@@ -69,18 +118,21 @@ export default class Iphone extends Component {
 						</div>
 					</div>
 					<div class={style.right}>
-						{this.state.display ? null:<span>Day</span>}
+						{this.state.display ? null:<span class={style.dte} >{new Date().toLocaleString("en", { weekday: "short" })}</span>}
 						<span class={style.feelslike}>{ this.state.feelsLike }</span>
 					</div>
 						
 				</div>
 				<div class={ this.state.display ? null:style.extra }>
 					<div class={style.left}>
+						{this.state.display ? null: <button onclick={this.changePc} >Chance pf precipitation &gt;</button>}
 						<span>{ this.state.precipitationChance }</span>
+						{this.state.display ? null: <button onclick={this.changeUv} >UV index &gt;</button>}
 						<span >{ this.state.uvIndex }</span>
 					</div>
 					<div class={style.right}>
-					{this.state.display ? null:<span class={style.recommendation}>Jacket</span>}
+					{this.state.display ? null:<div class={style.recommendation}><button onClick={this.changeRec}>&gt; Recommendation</button><br/>Raincoat</div>}
+					{this.state.display ? null: <button onclick={this.changeWs} >&gt; Wind speed</button>}
 						<span class={style.ws}>{ this.state.windSpeed }</span>
 					</div>
 				</div>
@@ -131,7 +183,7 @@ export default class Iphone extends Component {
 			uv = "High";
 		}else if(uvi>=3){
 			uv="Medium";
-		}else {
+		}else if (uvi>=0) {
 			uv="Low";
 		}
 		var forecasts = Array(6);
