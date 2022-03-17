@@ -1,0 +1,35 @@
+.column{
+    display: flex;
+    flex-direction: column;
+}
+.right{
+    float: right;
+}
+.left{
+    float: left;
+}
+.center{
+    justify-content: center;
+}
+.row{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.cwIcon{
+    width: 100px;
+    height: 100px;
+}
+.capitalize{
+    text-transform: capitalize;
+}
+.bg-pinkish{
+    background-color: rgba(255, 192, 221, 0.705);
+}
+.bg-redish{
+    background-color: rgba(173, 0, 0, 0.521);
+}
+.roundedCorners{
+    border-radius: 2em;
+}

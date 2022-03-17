@@ -1,111 +1,70 @@
-# Preact Boilerplate / Starter Kit for a Weather App
+# Getting Started with Create React App
 
-## Set-Up Guide
-- [Installation](#installation)
-- [Development Workflow](#development-workflow)
-- [Quick Boilerplate Overview](#quick-boilerplate-overview)
-- [Extra Info](#extra-info)
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-# (Test for confirmation of clone (Shorya))
-# test (Sadia)
-#test (Rayyan)
+## Available Scripts
 
+In the project directory, you can run:
 
+### `npm start`
 
+Runs the app in the development mode.\
+Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
 
-**0. Before doing any of this, if you're using your own laptop/desktop, make sure you've got the latest versions of node and npm installed (npm v: 4.0.5 & node v: 7.4.0) :**
+The page will reload when you make changes.\
+You may also see any lint errors in the console.
 
-```sh
-node -v
-npm -v
-```
+### `npm test`
 
-## Installation
+Launches the test runner in the interactive watch mode.\
+See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
 
-**1. Clone this repository :**
+### `npm run build`
 
-```sh
-git clone --depth 1 https://github.com/Juan-Alvarado/weatherapp-boilerplate.git weather-app
-cd weather-app
-```
+Builds the app for production to the `build` folder.\
+It correctly bundles React in production mode and optimizes the build for the best performance.
 
-**2. Make it your own :**
+The build is minified and the filenames include the hashes.\
+Your app is ready to be deployed!
 
-```sh
-rm -rf .git && git init && npm init
-```
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
 
-> :information_source: Command above re-initializes the repo and sets up your NPM project.
+### `npm run eject`
 
-**2a. Make it your own (Windows):**
+**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you are using Windowsyou can run the three necessary comand using Powershell. You mught need elevated privileges.
+If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-```sh
-rm -r -fo .git
-git init
-npm init
-```
+Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
 
-**3. Install the dependencies :**
+You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
 
-```sh
-npm install
-```
+## Learn More
 
-## Development Workflow
+You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
 
+To learn React, check out the [React documentation](https://reactjs.org/).
 
-**4. Start a live-reload development server :**
+### Code Splitting
 
-```sh
-npm run dev
-```
+This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-> This is a full web server for your project. Any time you make changes within the `src` directory, it will rebuild and even refresh your browser.
+### Analyzing the Bundle Size
 
+This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-**5. Generate a production build in `./build` :**
+### Making a Progressive Web App
 
-```sh
-npm run build
-```
+This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
 
-**6. Start local production server with [serve](https://github.com/zeit/serve):**
+### Advanced Configuration
 
-```sh
-npm start
-```
+This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
 
-> This simply serves up the contents of `./build`. Bear in mind, if you use this, the localhost port your server is running on will refresh, and you'll also need to restart it to see any changes you've made to the code in `src`.
+### Deployment
 
+This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
 
-## Quick Boilerplate Overview
+### `npm run build` fails to minify
 
-- The initial run will display the iPhone version (iPhone 6/7 Plus screen size); however, if you modify the path on the url bar by adding "/ipad", you can view the tablet version (iPad Air screen size).
-
-- The CSS pre-processor in use is Less. You don't have to worry about the syntax and just write in normal CSS as there are helper modules to assist you (located in `style/helpers`).
-
-- There are many weather APIs out there; this boilerplate uses OpenWeatherMap. Sign up, is free and you can find out more about it here : https://openweathermap.org/api
-
-- Most importantly, have fun with it ! 👌
-
-
-## Extra Info
-
-1. Handling URLS
-
-:information_source: You can use URL Routing as defined [here](http://git.io/preact-router).
-
-Pages are just regular components that get mounted when you navigate to a certain URL. Any URL parameters get passed to the component as `props`.
-
-Defining what component(s) to load for a given URL is easy and declarative. You can even mix-and-match URL parameters and normal props.
-
-```js
-<Router>
-  <A path="/" />
-  <B path="/b" id="42" />
-  <C path="/c/:id" />
-</Router>
-```
-# weather-app
+This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)

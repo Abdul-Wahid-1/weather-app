@@ -1,0 +1,10 @@
+.container { 
+	display: flex;
+	flex-direction: column;
+	background-image: url('./assets/cloud-moon-bg.jpg');
+	width: 414px;
+	text-align: center;
+	margin: 0 auto;
+	height:2000px;
+	color: #fff;
+}
